@@ -8,7 +8,6 @@
 #----------------------------#
 
 OBJDIR := build
-RELDIR := release
 
 INCDIR := include
 COMMON_SRCDIR := fourier libulc
@@ -24,7 +23,7 @@ ARCHCROSS :=
 ARCHFLAGS := -msse -msse2 -mavx -mavx2 -mfma
 
 CCFLAGS := $(ARCHFLAGS) -fno-math-errno -ffast-math -O2 -Wall -Wextra $(foreach dir, $(INCDIR), -I$(dir))
-LDFLAGS := -static -s
+LDFLAGS := -static -s -lm
 
 #----------------------------#
 # Tools
@@ -38,8 +37,8 @@ LD := $(ARCHCROSS)gcc
 #----------------------------#
 
 COMMON_SRC     := $(foreach dir, $(COMMON_SRCDIR), $(wildcard $(dir)/*.c))
-ENCODETOOL_SRC := $(filter-out $(ENCODETOOL_SRCDIR)/ulcDecodeTool.c, $(wildcard $(ENCODETOOL_SRCDIR)/*.c))
-DECODETOOL_SRC := $(filter-out $(DECODETOOL_SRCDIR)/ulcEncodeTool.c, $(wildcard $(DECODETOOL_SRCDIR)/*.c))
+ENCODETOOL_SRC := $(filter-out $(ENCODETOOL_SRCDIR)/ulcdecodetool.c, $(wildcard $(ENCODETOOL_SRCDIR)/*.c))
+DECODETOOL_SRC := $(filter-out $(DECODETOOL_SRCDIR)/ulcencodetool.c, $(wildcard $(DECODETOOL_SRCDIR)/*.c))
 COMMON_OBJ     := $(addprefix $(OBJDIR)/, $(notdir $(COMMON_SRC:.c=.o)))
 ENCODETOOL_OBJ := $(addprefix $(OBJDIR)/, $(notdir $(ENCODETOOL_SRC:.c=.o)))
 DECODETOOL_OBJ := $(addprefix $(OBJDIR)/, $(notdir $(DECODETOOL_SRC:.c=.o)))
@@ -64,7 +63,7 @@ $(OBJDIR)/%.o : %.c
 
 all : common encodetool decodetool
 
-$(OBJDIR) $(RELDIR) :; mkdir -p $@
+$(OBJDIR) :; mkdir -p $@
 
 #----------------------------#
 # make common
@@ -82,8 +81,8 @@ encodetool : $(ENCODETOOL_EXE)
 
 $(ENCODETOOL_OBJ) : $(ENCODETOOL_SRC) | $(OBJDIR)
 
-$(ENCODETOOL_EXE) : $(COMMON_OBJ) $(ENCODETOOL_OBJ) | $(RELDIR)
-	$(LD) -o $(RELDIR)/$@ $^ $(LDFLAGS)
+$(ENCODETOOL_EXE) : $(COMMON_OBJ) $(ENCODETOOL_OBJ)
+	$(LD) $^ $(LDFLAGS) -o $@
 
 #----------------------------#
 # make decodetool
@@ -93,14 +92,14 @@ decodetool : $(DECODETOOL_EXE)
 
 $(DECODETOOL_OBJ) : $(DECODETOOL_SRC) | $(OBJDIR)
 
-$(DECODETOOL_EXE) : $(COMMON_OBJ) $(DECODETOOL_OBJ) | $(RELDIR)
-	$(LD) -o $(RELDIR)/$@ $^ $(LDFLAGS)
+$(DECODETOOL_EXE) : $(COMMON_OBJ) $(DECODETOOL_OBJ)
+	$(LD) $^ $(LDFLAGS) -o $@
 
 #----------------------------#
 # make clean
 #----------------------------#
 
-clean :; rm -rf $(OBJDIR) $(RELDIR)
+clean :; rm -rf $(OBJDIR) $(ENCODETOOL_EXE) $(DECODETOOL_EXE)
 
 #----------------------------#
 # Dependencies

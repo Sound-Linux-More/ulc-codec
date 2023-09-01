@@ -18,36 +18,39 @@
 //! WAVE -> fmt
 #define WAVE_FORMAT_PCM        0x0001
 #define WAVE_FORMAT_IEEE_FLOAT 0x0003
-struct WAVE_fmt_t {
-	uint16_t wFormatTag;
-	uint16_t nChannels;
-	uint32_t nSamplesPerSec;
-	uint32_t nAvgBytesPerSec;
-	uint16_t nBlockAlign;
-	uint16_t wBitsPerSample;
+struct WAVE_fmt_t
+{
+    uint16_t wFormatTag;
+    uint16_t nChannels;
+    uint32_t nSamplesPerSec;
+    uint32_t nAvgBytesPerSec;
+    uint16_t nBlockAlign;
+    uint16_t wBitsPerSample;
 };
 
 /**************************************/
 
 //! WAV chunk descriptor type
-struct WAV_Chunk_t {
-	uint32_t CkType;
-	uint32_t CkSize;
-	size_t   FileOffs;
-	struct WAV_Chunk_t *Prev, *Next;
+struct WAV_Chunk_t
+{
+    uint32_t CkType;
+    uint32_t CkSize;
+    size_t   FileOffs;
+    struct WAV_Chunk_t *Prev, *Next;
 };
 
 /**************************************/
 
 //! Internal state type
-struct WAV_State_t {
-	FILE *File;
-	uint8_t  Mode;
-	uint32_t SamplePosition;
-	uint32_t nSamplePoints;
-	struct WAVE_fmt_t  *fmt;
-	struct WAV_Chunk_t *dataCk;
-	struct WAV_Chunk_t *Chunks;
+struct WAV_State_t
+{
+    FILE *File;
+    uint8_t  Mode;
+    uint32_t SamplePosition;
+    uint32_t nSamplePoints;
+    struct WAVE_fmt_t  *fmt;
+    struct WAV_Chunk_t *dataCk;
+    struct WAV_Chunk_t *Chunks;
 };
 
 /**************************************/
@@ -123,8 +126,9 @@ int WAV_WriteFromFloat(struct WAV_State_t *WavState, const float *Src, uint32_t 
 //! Arguments:
 //!   WavState: Structure holding the internal state.
 //! Returns: Nothing; samples flushed from buffer.
-inline void WAV_Flush(struct WAV_State_t *WavState) {
-	fflush(WavState->File);
+inline void WAV_Flush(struct WAV_State_t *WavState)
+{
+    fflush(WavState->File);
 }
 
 /**************************************/

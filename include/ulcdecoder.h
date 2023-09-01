@@ -10,25 +10,26 @@
 //! NOTE:
 //!  -The global state data must be set before calling ULC_DecoderState_Init()
 //!  -{nChan, BlockSize,} must not change after calling ULC_EncoderState_Init()
-struct ULC_DecoderState_t {
-	//! Global state (do not change after initialization)
-	int nChan;     //! Channels in encoding scheme
-	int BlockSize; //! Transform block size
+struct ULC_DecoderState_t
+{
+    //! Global state (do not change after initialization)
+    int nChan;     //! Channels in encoding scheme
+    int BlockSize; //! Transform block size
 
-	//! Decoding state
-	//! Buffer memory layout:
-	//!  Data:
-	//!   char  _Padding[];
-	//!   float TransformBuffer[BlockSize]
-	//!   float TransformTemp  [nChan * BlockSize]
-	//!   float TransformInvLap[nChan * BlockSize/2]
-	//! BufferData contains the pointer returned by malloc()
-	//! TransformTemp[] is large because we need to interleave the output.
-	int    LastSubBlockSize; //! Size of last [sub]block processed
-	void  *BufferData;
-	float *TransformBuffer;
-	float *TransformTemp;
-	float *TransformInvLap;
+    //! Decoding state
+    //! Buffer memory layout:
+    //!  Data:
+    //!   char  _Padding[];
+    //!   float TransformBuffer[BlockSize]
+    //!   float TransformTemp  [nChan * BlockSize]
+    //!   float TransformInvLap[nChan * BlockSize/2]
+    //! BufferData contains the pointer returned by malloc()
+    //! TransformTemp[] is large because we need to interleave the output.
+    int    LastSubBlockSize; //! Size of last [sub]block processed
+    void  *BufferData;
+    float *TransformBuffer;
+    float *TransformTemp;
+    float *TransformInvLap;
 };
 
 /**************************************/

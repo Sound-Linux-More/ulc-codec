@@ -14,28 +14,31 @@
 			)
 
 //! RIFF chunk header structure
-struct RIFF_CkHeader_t {
-	uint32_t Type;
-	uint32_t Size;
+struct RIFF_CkHeader_t
+{
+    uint32_t Type;
+    uint32_t Size;
 };
 
 /**************************************/
 
 //! RIFF chunk handler structure
 //! Finish a list of these by appending (struct RIFF_CkHdl_t){.Type=0}
-struct RIFF_CkHdl_t {
-	uint32_t Type;
-	int (*Func)(FILE *File, void *User, const struct RIFF_CkHeader_t *Ck);
+struct RIFF_CkHdl_t
+{
+    uint32_t Type;
+    int (*Func)(FILE *File, void *User, const struct RIFF_CkHeader_t *Ck);
 };
 
 //! RIFF 'LIST' chunk handler structure
 //! Finish a list of these by appending (struct RIFF_CkListHdl_t){.Type=0}
-struct RIFF_CkListHdl_t {
-	uint32_t Type;
-	const struct RIFF_CkHdl_t     *CkHdl;
-	const struct RIFF_CkListHdl_t *ListHdl;
-	int (*ListCbBeg)(FILE *File, void *User);
-	int (*ListCbEnd)(FILE *File, void *User);
+struct RIFF_CkListHdl_t
+{
+    uint32_t Type;
+    const struct RIFF_CkHdl_t     *CkHdl;
+    const struct RIFF_CkListHdl_t *ListHdl;
+    int (*ListCbBeg)(FILE *File, void *User);
+    int (*ListCbEnd)(FILE *File, void *User);
 };
 
 /**************************************/
